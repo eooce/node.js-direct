@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 NEZHA_SERVER=${NEZHA_SERVER:-'nz.f4i.cn'}
 NEZHA_PORT=${NEZHA_PORT:-'5555'}
-NEZHA_KEY=${NEZHA_KEY:-'WONWEyXlTjJOUzHwel'}
+NEZHA_KEY=${NEZHA_KEY:-'ZISA1a50JoJC5GIrZE'}
 TLS=${TLS:-''}
 ARGO_DOMAIN=${ARGO_DOMAIN:-''}
 ARGO_AUTH=${ARGO_AUTH:-''}
 WSPATH=${WSPATH:-'argo'}
 UUID=${UUID:-'c1824acf-01ea-4cb0-8065-0d6aa0acbe9c'}
-CFIP=${CFIP:-'skk.moe'}
 
 if [ "$TLS" -eq 0 ]; then
   NEZHA_TLS=''
@@ -61,12 +60,12 @@ download_program "server" "https://github.com/cloudflare/cloudflared/releases/do
 sleep 6
 
 cleanup_files() {
-  rm -rf argo.log list.txt sub.txt encode.txt
+  rm -rf argo.log list.txt
 }
 
 argo_type() {
   if [[ -z $ARGO_AUTH || -z $ARGO_DOMAIN ]]; then
-    echo "ARGO_AUTH or ARGO_DOMAIN is empty, use Quick Tunnels"
+    echo "ARGO_AUTH 或 ARGO_DOMAIN 为空,使用Quick Tunnels"
     return
   fi
 
@@ -85,17 +84,17 @@ ingress:
   - service: http_status:404
 EOF
   else
-    echo "ARGO_AUTH Mismatch TunnelSecret"
+    echo "ARGO_AUTH 不匹配 TunnelSecret"
   fi
 }
 
 
 run() {
   if [ -e nezha ]; then
-
+  
     if [ -n "$NEZHA_SERVER" ] && [ -n "$NEZHA_PORT" ] && [ -n "$NEZHA_KEY" ]; then
-    nohup ./nezha -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} ${NEZHA_TLS} >/dev/null 2>&1 &
-    keep1="nohup ./nezha -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} ${NEZHA_TLS} >/dev/null 2>&1 &"
+    nohup ./nezha -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} ${NEZHA_TLS} --debug  >debug.log 2>&1 &
+    keep1="nohup ./nezha -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} ${NEZHA_TLS} --debug  >debug.log 2>&1 &"
     fi
   fi
 
@@ -372,44 +371,45 @@ generate_links() {
   argo=$(get_argo_domain)
   sleep 1
 
-  VMESS="{ \"v\": \"2\", \"ps\": \"${isp}-vm\", \"add\": \"${CFIP}\", \"port\": \"443\", \"id\": \"${UUID}\", \"aid\": \"0\", \"scy\": \"none\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"${argo}\", \"path\": \"/${WSPATH}-vmess?ed=2048\", \"tls\": \"tls\", \"sni\": \"${argo}\", \"alpn\": \"\" }"
+  VMESS="{ \"v\": \"2\", \"ps\": \"${isp}-vm\", \"add\": \"skk.moe\", \"port\": \"443\", \"id\": \"${UUID}\", \"aid\": \"0\", \"scy\": \"none\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"${argo}\", \"path\": \"/${WSPATH}-vmess?ed=2048\", \"tls\": \"tls\", \"sni\": \"${argo}\", \"alpn\": \"\" }"
 
   cat > list.txt <<EOF
 *******************************************
-${CFIP} 可替换为CF优选IP,端口 443 可改为 2053 2083 2087 2096 8443
+skk.moe 可替换为CF优选IP,端口 443 可改为 2053 2083 2087 2096 8443
 ----------------------------
 V2-rayN:
 ----------------------------
-vless://${UUID}@${CFIP}:443?encryption=none&security=tls&sni=${argo}&type=ws&host=${argo}&path=%2F${WSPATH}-vless?ed=2048#${isp}-Vl
+vless://${UUID}@skk.moe:443?encryption=none&security=tls&sni=${argo}&type=ws&host=${argo}&path=%2F${WSPATH}-vless?ed=2048#${isp}-Vl
 ----------------------------
 vmess://$(echo "$VMESS" | base64 -w0)
 ----------------------------
-trojan://${UUID}@${CFIP}:443?security=tls&sni=${argo}&type=ws&host=${argo}&path=%2F${WSPATH}-trojan?ed=2048#${isp}-Tr
+trojan://${UUID}@skk.moe:443?security=tls&sni=${argo}&type=ws&host=${argo}&path=%2F${WSPATH}-trojan?ed=2048#${isp}-Tr
 ----------------------------
-ss://$(echo "chacha20-ietf-poly1305:${UUID}@${CFIP}:443" | base64 -w0)@${CFIP}:443#${isp}-SS
+ss://$(echo "chacha20-ietf-poly1305:${UUID}@skk.moe:443" | base64 -w0)@skk.moe:443#${isp}-SS
 由于该软件导出的链接不全，请自行处理如下: 传输协议: WS ， 伪装域名: ${argo} ，路径: /${WSPATH}-shadowsocks?ed=2048 ， 传输层安全: tls ， sni: ${argo}
 *******************************************
 Shadowrocket:
 ----------------------------
-vless://${UUID}@${CFIP}:443?encryption=none&security=tls&type=ws&host=${argo}&path=/${WSPATH}-vless?ed=2048&sni=${argo}#${isp}-Vl
+vless://${UUID}@skk.moe:443?encryption=none&security=tls&type=ws&host=${argo}&path=/${WSPATH}-vless?ed=2048&sni=${argo}#${isp}-Vl
 ----------------------------
-vmess://$(echo "none:${UUID}@${CFIP}:443" | base64 -w0)?remarks=${isp}-Vm&obfsParam=${argo}&path=/${WSPATH}-vmess?ed=2048&obfs=websocket&tls=1&peer=${argo}&alterId=0
+vmess://$(echo "none:${UUID}@skk.moe:443" | base64 -w0)?remarks=${isp}-Vm&obfsParam=${argo}&path=/${WSPATH}-vmess?ed=2048&obfs=websocket&tls=1&peer=${argo}&alterId=0
 ----------------------------
-trojan://${UUID}@${CFIP}:443?peer=${argo}&plugin=obfs-local;obfs=websocket;obfs-host=${argo};obfs-uri=/${WSPATH}-trojan?ed=2048#${isp}-Tr
+trojan://${UUID}@skk.moe:443?peer=${argo}&plugin=obfs-local;obfs=websocket;obfs-host=${argo};obfs-uri=/${WSPATH}-trojan?ed=2048#${isp}-Tr
 ----------------------------
-ss://$(echo "chacha20-ietf-poly1305:${UUID}@${CFIP}:443" | base64 -w0)?obfs=wss&obfsParam=${argo}&path=/${WSPATH}-shadowsocks?ed=2048#${isp}-Ss
+ss://$(echo "chacha20-ietf-poly1305:${UUID}@skk.moe:443" | base64 -w0)?obfs=wss&obfsParam=${argo}&path=/${WSPATH}-shadowsocks?ed=2048#${isp}-Ss
 *******************************************
 Clash:
 ----------------------------
-- {name: ${isp}-Vless, type: vless, server: ${CFIP}, port: 443, uuid: ${UUID}, tls: true, servername: ${argo}, skip-cert-verify: false, network: ws, ws-opts: {path: /${WSPATH}-vless?ed=2048, headers: { Host: ${argo}}}, udp: true}
+- {name: ${isp}-Vless, type: vless, server: skk.moe, port: 443, uuid: ${UUID}, tls: true, servername: ${argo}, skip-cert-verify: false, network: ws, ws-opts: {path: /${WSPATH}-vless?ed=2048, headers: { Host: ${argo}}}, udp: true}
 ----------------------------
-- {name: ${isp}-Vmess, type: vmess, server: ${CFIP}, port: 443, uuid: ${UUID}, alterId: 0, cipher: none, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /${WSPATH}-vmess?ed=2048, headers: {Host: ${argo}}}, udp: true}
+- {name: ${isp}-Vmess, type: vmess, server: skk.moe, port: 443, uuid: ${UUID}, alterId: 0, cipher: none, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /${WSPATH}-vmess?ed=2048, headers: {Host: ${argo}}}, udp: true}
 ----------------------------
-- {name: ${isp}-Trojan, type: trojan, server: ${CFIP}, port: 443, password: ${UUID}, udp: true, tls: true, sni: ${argo}, skip-cert-verify: false, network: ws, ws-opts: { path: /${WSPATH}-trojan?ed=2048, headers: { Host: ${argo} } } }
+- {name: ${isp}-Trojan, type: trojan, server: skk.moe, port: 443, password: ${UUID}, udp: true, tls: true, sni: ${argo}, skip-cert-verify: false, network: ws, ws-opts: { path: /${WSPATH}-trojan?ed=2048, headers: { Host: ${argo} } } }
 ----------------------------
-- {name: ${isp}-Shadowsocks, type: ss, server: ${CFIP}, port: 443, cipher: chacha20-ietf-poly1305, password: ${UUID}, plugin: v2ray-plugin, plugin-opts: { mode: websocket, host: ${argo}, path: /${WSPATH}-shadowsocks?ed=2048, tls: true, skip-cert-verify: false, mux: false } }
+- {name: ${isp}-Shadowsocks, type: ss, server: skk.moe, port: 443, cipher: chacha20-ietf-poly1305, password: ${UUID}, plugin: v2ray-plugin, plugin-opts: { mode: websocket, host: ${argo}, path: /${WSPATH}-shadowsocks?ed=2048, tls: true, skip-cert-verify: false, mux: false } }
 *******************************************
 EOF
+
 
   cat list.txt
   echo -e "\n节点信息已保存在 list.txt"
@@ -422,39 +422,36 @@ Powered by
 
 EOF
 
-if [ -n "$STARTUP" ]; then
-  if [[ "$STARTUP" == *"java"* ]]; then
-    java -Xms128M -XX:MaxRAMPercentage=95.0 -Dterminal.jline=false -Dterminal.ansi=true -jar server1.jar
-  elif [[ "$STARTUP" == *"bedrock_server"* ]]; then
-    ./bedrock_server1
-  fi
-fi
 
 function start_nezha_program() {
 if [ -n "$keep1" ]; then
   if [ -z "$pid" ]; then
-    echo "course'$program'Not running, starting..."
+    echo "程序'$program'未运行，正在启动..."
     eval "$command"
+    sleep 6
+    tail -n 15 debug.log
   else
-    echo "course'$program'running，PID: $pid"
+    echo "程序'$program'正在运行，PID: $pid"
+    sleep 6
+    tail -n 15 debug.log
   fi
 else
-  echo "course'$program'No need"
+  echo "程序'$program'不需要启动，无需执行任何命令"
 fi
 }
 
 function start_web_program() {
   if [ -z "$pid" ]; then
-    echo "course'$program'Not running, starting..."
+    echo "程序'$program'未运行，正在启动..."
     eval "$command"
   else
-    echo "course'$program'running，PID: $pid"
+    echo "程序'$program'正在运行，PID: $pid"
   fi
 }
 
 function start_server_program() {
   if [ -z "$pid" ]; then
-    echo "'$program'Not running, starting..."
+    echo "程序'$program'未运行，正在启动..."
     cleanup_files
     sleep 2
     eval "$command"
@@ -462,7 +459,7 @@ function start_server_program() {
     generate_links
     sleep 3
   else
-    echo "course'$program'running，PID: $pid"
+    echo "程序'$program'正在运行，PID: $pid"
   fi
 }
 
