@@ -5,14 +5,13 @@ const { exec } = require('child_process');
 const fs = require('fs');
 
 const listFilePath = 'list.txt';
-const subFilePath = 'sub.txt';
 const debug = parseInt(process.env.DEBUG, 10) || 0;
 
 let startScriptPath;
 if (debug === 0) {
-  startScriptPath = './main.sh';
+  startScriptPath = './start.sh';
 } else if (debug === 1) {
-  startScriptPath = './main1.sh';
+  startScriptPath = './start1.sh';
 }
 console.log(startScriptPath);
 
