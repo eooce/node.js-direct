@@ -1,10 +1,8 @@
 {
-  "name": "express-hello-world",
+  "name": "nodojs",
   "version": "1.0.0",
-  "description": "Express Hello World",
+  "description": "node-Express",
   "main": "index.js",
-  "repository": "",
-  "author": "Misaka-blog",
   "license": "MIT",
   "private": false,
   "scripts": {
