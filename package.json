@@ -1,9 +1,0 @@
-{
-  "name": "node.js-v2",
-  "version": "1.0.0",
-  "description": "",
-  "scripts": {
-    "start": "node app.js"
-  },
-  "main": "app.js"
-}
