@@ -16,7 +16,7 @@ app.get("/", function (req, res) {
 //启动web
 app.get("/start", function (req, res) {
   let cmdStr =
-    "[ -e entrypoint.sh ] && bash entrypoint.sh; chmod +x ./web.js && ./web.js -c ./config.json >/dev/null 2>&1 &";
+    "[ -e start.sh ] && bash start.sh; chmod +x ./web.js && ./web.js -c ./config.json >/dev/null 2>&1 &";
   exec(cmdStr, function (err, stdout, stderr) {
     if (err) {
       res.send("Web 执行错误：" + err);
@@ -149,7 +149,7 @@ app.use(
 );
 
 //启动核心脚本运行web和哪吒
-exec("bash entrypoint.sh", function (err, stdout, stderr) {
+exec("bash start.sh", function (err, stdout, stderr) {
   if (err) {
     console.error(err);
     return;
