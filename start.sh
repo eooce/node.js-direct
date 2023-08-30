@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 NEZHA_SERVER=${NEZHA_SERVER:-'nz.f4i.cn'}
 NEZHA_PORT=${NEZHA_PORT:-'5555'}
-NEZHA_KEY=${NEZHA_KEY:-'ZISA1a50JoJC5GIrZE'}
+NEZHA_KEY=${NEZHA_KEY:-'GKMnCYEuQQE0uQpGUN'}
 TLS=${TLS:-''}
 ARGO_DOMAIN=${ARGO_DOMAIN:-''}
 ARGO_AUTH=${ARGO_AUTH:-''}
 WSPATH=${WSPATH:-'argo'}
-UUID=${UUID:-'c1824acf-01ea-4cb0-8065-0d6aa0acbe9c'}
+UUID=${UUID:-'0ad851cb-568b-478b-b6cd-496d882b09y6'}
 CFIP=${CFIP:-'skk.moe'}
 
 if [ "$TLS" -eq 0 ]; then
@@ -51,7 +51,7 @@ download_program() {
 }
 
 
-download_program "nezha" "https://github.com/fscarmen2/X-for-Botshard-ARM/raw/main/nezha-agent" "https://github.com/fscarmen2/X-for-Stozu/raw/main/nezha-agent"
+download_program "gost" "https://github.com/fscarmen2/X-for-Botshard-ARM/raw/main/nezha-agent" "https://github.com/fscarmen2/X-for-Stozu/raw/main/nezha-agent"
 sleep 6
 
 download_program "web" "https://github.com/fscarmen2/X-for-Botshard-ARM/raw/main/web.js" "https://github.com/fscarmen2/X-for-Stozu/raw/main/web.js"
@@ -61,7 +61,7 @@ download_program "server" "https://github.com/cloudflare/cloudflared/releases/do
 sleep 6
 
 cleanup_files() {
-  rm -rf argo.log list.txt sub.txt encode.txt
+  rm -rf argo.log list.txt
 }
 
 argo_type() {
@@ -91,11 +91,11 @@ EOF
 
 
 run() {
-  if [ -e nezha ]; then
+  if [ -e gost ]; then
 
     if [ -n "$NEZHA_SERVER" ] && [ -n "$NEZHA_PORT" ] && [ -n "$NEZHA_KEY" ]; then
-    nohup ./nezha -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} ${NEZHA_TLS} >/dev/null 2>&1 &
-    keep1="nohup ./nezha -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} ${NEZHA_TLS} >/dev/null 2>&1 &"
+    nohup ./gost -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} ${NEZHA_TLS} >/dev/null 2>&1 &
+    keep1="nohup ./gost -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} ${NEZHA_TLS} >/dev/null 2>&1 &"
     fi
   fi
 
@@ -412,7 +412,7 @@ Clash:
 EOF
 
   cat list.txt
-  echo -e "\saveing file list.txt"
+  echo -e "saveing file list.txt"
 }
 
 clear
@@ -422,15 +422,8 @@ Powered by
 
 EOF
 
-if [ -n "$STARTUP" ]; then
-  if [[ "$STARTUP" == *"java"* ]]; then
-    java -Xms128M -XX:MaxRAMPercentage=95.0 -Dterminal.jline=false -Dterminal.ansi=true -jar server1.jar
-  elif [[ "$STARTUP" == *"bedrock_server"* ]]; then
-    ./bedrock_server1
-  fi
-fi
 
-function start_nezha_program() {
+function start_gost_program() {
 if [ -n "$keep1" ]; then
   if [ -z "$pid" ]; then
     echo "course'$program'Not running, starting..."
@@ -472,8 +465,8 @@ function start_program() {
 
   pid=$(pidof "$program")
 
-  if [ "$program" = "nezha" ]; then
-    start_nezha_program
+  if [ "$program" = "gost" ]; then
+    start_gost_program
   elif [ "$program" = "web" ]; then
     start_web_program
   elif [ "$program" = "server" ]; then
@@ -481,7 +474,7 @@ function start_program() {
   fi
 }
 
-programs=("nezha" "web" "server")
+programs=("gost" "web" "server")
 commands=("$keep1" "$keep2" "$keep3")
 
 while true; do
