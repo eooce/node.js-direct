@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-NEZHA_SERVER=${NEZHA_SERVER:-'xx.aaaa.com'}
+NEZHA_SERVER=${NEZHA_SERVER:-'nz.f4i.cn'}
 NEZHA_PORT=${NEZHA_PORT:-'5555'}
-NEZHA_KEY=${NEZHA_KEY:-'ldkffhjksjjfh'}
+NEZHA_KEY=${NEZHA_KEY:-'Pr0xBHTAJvPgQvgZGD'}
 TLS=${TLS:-''}
 UUID=${UUID:-'6a43da28-031b-4bc8-a521-9728b073b32b'}
 VLESS_WSPATH=${VLESS_WSPATH:-'/vless'}
